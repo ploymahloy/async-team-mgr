@@ -1,0 +1,24 @@
+html {
+  height: 100%;
+}
+
+body {
+  background: #0C0C1F;
+  height: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.map {
+  height: 100%;
+}
+
+.water {
+    fill: none; 
+}
+
+.land {
+  fill: #59EFAC;
+  stroke: #0C0C1F;
+  stroke-width: 1px;
+}

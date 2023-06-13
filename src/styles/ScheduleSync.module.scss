@@ -1,0 +1,18 @@
+.wrapper {
+	margin: 0 auto;
+	padding: 5px;
+	width: 95vw;
+	height: 80vh;
+	border-radius: 10px;
+	background-color: #ffffff;
+  z-index: -10;
+}
+
+h2 {
+  text-align: center;
+}
+
+.schedule {
+  overflow-x: scroll;
+  display: inline;
+}
