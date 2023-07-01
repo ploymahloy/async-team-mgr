@@ -1,21 +1,11 @@
-import { useDroppable } from '@dnd-kit/core';
-import './Column.css';
+import Item from './Item';
 
-type ColumnProps = {
-  id: string,
-  children: string | JSX.Element
-}
-
-export default function Column({id, children}: ColumnProps) {
-  const {isOver, setNodeRef} = useDroppable({
-    id: id,
-  });
-
-  const style = { backgroundColor: isOver ? 'green' : undefined }
-  
+export default function Column() {
   return (
-    <div ref={setNodeRef} style={style} className="column">
-      {children}
+    <div className='bg-gray-500 w-[300px] p-3'>
+      <Item />
+      <Item />
+      <Item />
     </div>
   );
 }
