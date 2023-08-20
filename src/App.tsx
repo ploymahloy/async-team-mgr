@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar';
 import Board from './components/Kanban/Board';
+// import Messenger from './components/Messenger';
 
 import './App.css';
 
@@ -8,6 +9,7 @@ function App() {
     <>
       <Navbar />
       <Board />
+      {/* <Messenger /> */}
     </>
   );
 }
