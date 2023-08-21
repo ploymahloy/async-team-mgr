@@ -6,6 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface DropResult {
   name: string;
+  panelName: string;
 }
 
 interface ItemsListTypes {
@@ -33,6 +34,7 @@ type ItemsReducerAction = {
     id: number;
     source: keyof ItemsListTypes;
     target: keyof ItemsListTypes;
+    targetType: string;
   }
 }
 
@@ -82,16 +84,27 @@ function Item(props: ItemProps) {
       console.log("useDrag > dropResult: ", dropResult);
       // if null, dropResult no dispatch is called because nothing is dropped?
 
+      let targetName, targetType;
+
+      if (dropResult?.name) {
+        targetName = dropResult.name;
+        targetType = "name";
+      } else {
+        targetName = dropResult?.panelName;
+        targetType = "panelName";
+      }
+
       if (dropResult) {
         dispatch({
           type: 'move',
           payload: {
             id: item.id,
             source: sourceList,
-            target: dropResult?.name as keyof ItemsListTypes,
+            target: targetName as keyof ItemsListTypes,
+            targetType
             // # Drag but no drop: why does it still delete
             // end?
-          },
+          }
         });
       }
     },
@@ -153,18 +166,23 @@ const ACTIONS = {
 function itemsReducer(state: ItemsData, action: ItemsReducerAction) {
   switch (action.type) {
     case ACTIONS.MOVE:
-      const { id, source, target } = action.payload;
+      const { id, source, target, targetType } = action.payload;
       const newState: ItemsData = { ...state };
 
-      // console.log("actions: ", action);
+      console.log("itemsReducer action: ", action);
 
       // find position is original list
       const position = newState[source].findIndex((item) => item.id == id);
 
       if (position === -1) return newState;
 
+      let newTarget;
+      if (targetType === "panelName") {
+        newTarget = target.toLowerCase() as keyof ItemsListTypes;
+      } else newTarget = target;
+
       // add to new list
-      newState[target]?.push(newState[source][position]);
+      newState[newTarget]?.push(newState[source][position]);
 
       // remove from old list
       // console.log("newState position: ", position);  = 0 | 1
@@ -176,26 +194,49 @@ function itemsReducer(state: ItemsData, action: ItemsReducerAction) {
   }
 }
 
+const Panel = ({ children, panelName }: any) => {
+  const { items } = useContext(ItemsContext);
+
+  const [, drop] = useDrop(() => ({
+    accept: ItemTypes.ITEM,
+    drop: (item, monitor) => {
+      console.log("Panel useDrop drop: ", panelName);
+      return { panelName }
+    },
+    collect: (...args) => {
+      const monitor = args[0];
+      console.log("Panel useDrop collect: ", args); 
+      return {
+        isOver: monitor.isOver() // # are you over me or the parent (grey doesn't work)
+      }
+    }
+  }), [items, panelName]);
+
+  return (
+    <div className='w-[300px] bg-gray-400 border-2 border-gray-500 rounded-md p-3' ref={drop}>{children}</div>
+  )
+};
+
 export default function Board() {
   const [items, dispatch] = useReducer(itemsReducer, initialItems);
-  // console.log("Board items: ", items);
+  console.log("Board items: ", items);
 
   return (
     <main className='h-[94vh] flex flex-row justify-center gap-2 p-3'>
       <DndProvider backend={HTML5Backend}>
         <ItemsContext.Provider value={{ items, dispatch }}>
-          <div className='w-[300px] bg-gray-400 border-2 border-gray-500 rounded-md p-3'>
+          <Panel panelName="Todo">
             <h3 className='text-center'>Todo</h3>
             <Items name="todo" />
-          </div>
-          <div className='w-[300px] bg-gray-400 border-2 border-gray-500 rounded-md p-3'>
+          </Panel>
+          <Panel panelName="Doing">
             <h3 className='text-center'>Doing</h3>
             <Items name="doing" />
-          </div>
-          <div className='w-[300px] bg-gray-400 border-2 border-gray-500 rounded-md p-3'>
+          </Panel>
+          <Panel panelName="Done">
             <h3 className='text-center'>Done</h3>
             <Items name="done" />
-          </div>
+          </Panel>
         </ItemsContext.Provider>
       </DndProvider>
     </main>
