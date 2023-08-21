@@ -34,9 +34,12 @@ type ItemsReducerAction = {
     id: number;
     source: keyof ItemsListTypes;
     target: keyof ItemsListTypes;
-    targetType: string;
+    targetType: TargetType;
   }
 }
+
+type TargetType // 2 types that are droppable
+  = 'name' | 'panelName' // list (white), parent (grey container)
 
 interface ItemsContext {
   items: ItemsData;
@@ -101,9 +104,7 @@ function Item(props: ItemProps) {
             id: item.id,
             source: sourceList,
             target: targetName as keyof ItemsListTypes,
-            targetType
-            // # Drag but no drop: why does it still delete
-            // end?
+            targetType: targetType as TargetType
           }
         });
       }
@@ -185,7 +186,6 @@ function itemsReducer(state: ItemsData, action: ItemsReducerAction) {
       newState[newTarget]?.push(newState[source][position]);
 
       // remove from old list
-      // console.log("newState position: ", position);  = 0 | 1
       newState[source]?.splice(position, 1);
 
       return newState;
