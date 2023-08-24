@@ -208,19 +208,19 @@ export default function Board() {
   const [items, dispatch] = useReducer(itemsReducer, initialItems);
 
   return (
-    <main className='h-[94vh] flex flex-row justify-center gap-2 p-3 bg-blue-700'>
+    <main className='h-[calc(100vh-40px)] flex flex-row justify-center gap-2 p-3 pb-5 bg-blue-600'>
       <DndProvider backend={HTML5Backend}>
         <ItemsContext.Provider value={{ items, dispatch }}>
           <Panel panelName="Todo">
-            <h3 className='text-2xl'>Todo</h3>
+            <h3 className='text-xl'>Todo</h3>
             <Items name="todo" />
           </Panel>
           <Panel panelName="Doing">
-            <h3 className='text-2xl'>Doing</h3>
+            <h3 className='text-xl'>Doing</h3>
             <Items name="doing" />
           </Panel>
           <Panel panelName="Done">
-            <h3 className='text-2xl'>Done</h3>
+            <h3 className='text-xl'>Done</h3>
             <Items name="done" />
           </Panel>
         </ItemsContext.Provider>
