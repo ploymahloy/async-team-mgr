@@ -208,7 +208,7 @@ export default function Board() {
   const [items, dispatch] = useReducer(itemsReducer, initialItems);
 
   return (
-    <main className='h-[calc(100vh-40px)] flex flex-row justify-center gap-2 p-3 pb-5 bg-blue-600'>
+    <main className='h-[calc(100vh-40px)] flex flex-row justify-center gap-2 p-3 pb-5 bg-sky-600'>
       <DndProvider backend={HTML5Backend}>
         <ItemsContext.Provider value={{ items, dispatch }}>
           <Panel panelName="Todo">
