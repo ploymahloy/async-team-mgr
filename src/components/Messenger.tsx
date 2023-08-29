@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import { BsFillPersonFill } from 'react-icons/bs';
 import { RiSendPlaneFill } from 'react-icons/ri';
@@ -42,24 +42,20 @@ const fakeMessages: MessagesType[] = [
 
 export default function Messenger() {
   const [messages, setMessages] = useState(fakeMessages);
-  const [draft, setDraft] = useState<string>('');
-  const [textareaheight, setTextareaheight] = useState(1); 
+  const [textareaheight, setTextareaHeight] = useState(1);
+  const [draft, setDraft] = useState('');
 
-  const handleContentChange = (e: any) => {
+  const handleContentChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value) { setDraft(e.target.value) };
 
-    const height = e.target.scrollHeight; 
-    const rowHeight = 25; 
-    const trows = Math.ceil(height / rowHeight) - 1; 
-    
-    if (trows && textareaheight) { 
-      
-      setTextareaheight(trows); 
-      
-    } 
+    const height = e.target.scrollHeight;
+    const rowHeight = 25;
+    const trows = Math.ceil(height / rowHeight) - 1;
+
+    if (trows && textareaheight) { setTextareaHeight(trows) };
   };
 
-  const handleButtonClick = (e: any) => {
+  const handleButtonClick = (e: MouseEvent) => {
     e.preventDefault();
 
     if (draft !== '') {
@@ -76,13 +72,15 @@ export default function Messenger() {
     }
 
     setDraft('');
-    setTextareaheight(1);
+    setTextareaHeight(1);
   }
 
   return (
     <div className="box-border flex h-[calc(100vh-40px)]">
       <div className="min-w-[220px]">
         <p className="text-2xl my-5 text-center">Messages</p>
+
+        {/* Open Threads */}
         <ul>
           {threads.map((name, index) => {
             return (
@@ -95,8 +93,11 @@ export default function Messenger() {
             )
           })}
         </ul>
+
       </div>
       <div className="w-full flex flex-col justify-end bg-zinc-200">
+
+        {/* Selected Thread Messages */}
         <div className='p-3 pb-0 overflow-scroll'>
           {messages.map(({ id, flow, body }, index) => {
             return (
@@ -123,13 +124,13 @@ export default function Messenger() {
           {/* Compose Message & Send Button */}
           <textarea
             rows={textareaheight}
-            onInput={handleContentChange}
+            onInput={() => handleContentChange}
             value={draft}
             className="w-[30vw] max-w-xl mr-3 p-2 bg-white rounded-md outline-none resize-none"
           />
           <button
             type='submit'
-            onClick={handleButtonClick}
+            onClick={() => handleButtonClick}
             className='inline-block h-11 bg-sky-600 active:bg-sky-500 rounded-full p-3'
           >
             <RiSendPlaneFill className='text-xl text-white' />
