@@ -1,4 +1,10 @@
-import { ChangeEvent, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  MouseEvent,
+  useRef,
+  useState
+} from 'react';
 
 import { BsFillPersonFill } from 'react-icons/bs';
 import { RiSendPlaneFill } from 'react-icons/ri';
@@ -42,20 +48,38 @@ const fakeMessages: MessagesType[] = [
 
 export default function Messenger() {
   const [messages, setMessages] = useState(fakeMessages);
-  const [textareaheight, setTextareaHeight] = useState(1);
+  const [textareaHeight, setTextareaHeight] = useState(1);
   const [draft, setDraft] = useState('');
 
-  const handleContentChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const handleInput = () => {
+    if (searchRef.current) {
+      let lowerCaseArray = threads.map(str => str.toLowerCase());
+      let searchStr = searchRef.current.value.toLowerCase();
+      let threadsSearched = [];
+
+      for (let i = 0; i < lowerCaseArray.length; i++) {
+        if (lowerCaseArray[i].includes(searchStr)) {
+          threadsSearched.push(lowerCaseArray[i]);
+        }
+      }
+
+      console.log("Search results: ", threadsSearched);
+    }
+  };
+
+  const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value) { setDraft(e.target.value) };
 
     const height = e.target.scrollHeight;
     const rowHeight = 25;
-    const trows = Math.ceil(height / rowHeight) - 1;
+    const trows = Math.ceil(height / rowHeight) - 1      ;
 
-    if (trows && textareaheight) { setTextareaHeight(trows) };
+    if (trows && textareaHeight) { setTextareaHeight(trows) };
   };
 
-  const handleButtonClick = (e: MouseEvent) => {
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (draft !== '') {
@@ -68,20 +92,29 @@ export default function Messenger() {
 
       setMessages((prev) => {
         return [...prev, newMessage]
-      });
-    }
+      })
 
-    setDraft('');
-    setTextareaHeight(1);
+      setDraft('');
+      setTextareaHeight(1);
+    }
   }
 
   return (
     <div className="box-border flex h-[calc(100vh-40px)]">
-      <div className="min-w-[220px]">
-        <p className="text-2xl my-5 text-center">Messages</p>
+      <div className="min-w-[320px] flex flex-col">
+
+        <p className="text-2xl mt-3 text-center">Messages</p>
+
+        {/* Search Bar */}
+        <input
+          ref={searchRef}
+          onChange={handleInput}
+          placeholder="Search messages"
+          className="m-3 p-2 outline-2 outline-neutral-400 border-2 border-neutral-400 rounded-lg"
+        />
 
         {/* Open Threads */}
-        <ul>
+        <ul className='w-full'>
           {threads.map((name, index) => {
             return (
               <button key={index} className='flex items-center w-full pl-3 hover:bg-zinc-200'>
@@ -119,26 +152,27 @@ export default function Messenger() {
             );
           })}
         </div>
-        <div className="flex justify-center items-center mb-1 p-3 bg-transparent">
+        <form className="flex justify-center items-center mb-1 p-3 bg-transparent">
 
           {/* Compose Message & Send Button */}
           <textarea
-            rows={textareaheight}
-            onInput={() => handleContentChange}
+            rows={textareaHeight}
+            onInput={(e: FormEvent<HTMLTextAreaElement>) => {
+              handleContentChange(e as ChangeEvent<HTMLTextAreaElement>)
+            }}
             value={draft}
             className="w-[30vw] max-w-xl mr-3 p-2 bg-white rounded-md outline-none resize-none"
           />
           <button
             type='submit'
-            onClick={() => handleButtonClick}
+            onClick={(e) => handleButtonClick(e)}
             className='inline-block h-11 bg-sky-600 active:bg-sky-500 rounded-full p-3'
           >
             <RiSendPlaneFill className='text-xl text-white' />
           </button>
 
-        </div>
+        </form>
       </div>
     </div>
   )
 }
-
