@@ -17,7 +17,7 @@ interface MessagesType {
   body: string
 }
 
-const threads: string[] = [
+const starterThreads: string[] = [
   "Cathy Workerson",
   "Abid Jobahava",
   "Max Employerton"
@@ -48,37 +48,40 @@ const fakeMessages: MessagesType[] = [
 
 export default function Messenger() {
   const [messages, setMessages] = useState(fakeMessages);
+  const [threads, setThreads] = useState(starterThreads);
   const [textareaHeight, setTextareaHeight] = useState(1);
   const [draft, setDraft] = useState('');
 
   const searchRef = useRef<HTMLInputElement>(null);
 
+  // Search Logic
   const handleInput = () => {
     if (searchRef.current) {
-      let lowerCaseArray = threads.map(str => str.toLowerCase());
       let searchStr = searchRef.current.value.toLowerCase();
       let threadsSearched = [];
 
-      for (let i = 0; i < lowerCaseArray.length; i++) {
-        if (lowerCaseArray[i].includes(searchStr)) {
-          threadsSearched.push(lowerCaseArray[i]);
+      for (let i = 0; i < starterThreads.length; i++) {
+        if (starterThreads[i].toLowerCase().includes(searchStr)) {
+          threadsSearched.push(starterThreads[i]);
         }
       }
 
-      console.log("Search results: ", threadsSearched);
+      setThreads(threadsSearched);
     }
   };
 
+  // TextArea Resizing
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value) { setDraft(e.target.value) };
 
     const height = e.target.scrollHeight;
     const rowHeight = 25;
-    const trows = Math.ceil(height / rowHeight) - 1      ;
+    const trows = Math.ceil(height / rowHeight) - 1;
 
     if (trows && textareaHeight) { setTextareaHeight(trows) };
   };
 
+  // Send Message
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -115,16 +118,18 @@ export default function Messenger() {
 
         {/* Open Threads */}
         <ul className='w-full'>
-          {threads.map((name, index) => {
-            return (
-              <button key={index} className='flex items-center w-full pl-3 hover:bg-zinc-200'>
-                <BsFillPersonFill className='mr-2 p-1 border-2 rounded-full border-sky-600 text-4xl text-sky-600' />
-                <li className="my-3">
-                  {name}
-                </li>
-              </button>
-            )
-          })}
+          {threads.length > 0
+            ? threads.map((name, index) => {
+              return (
+                <button key={index} className='flex items-center w-full pl-3 hover:bg-zinc-200'>
+                  <BsFillPersonFill className='mr-2 p-1 border-2 rounded-full border-sky-600 text-4xl text-sky-600' />
+                  <li className="my-3">
+                    {name}
+                  </li>
+                </button>
+              )
+            })
+            : <li className='text-center'>No results found</li>}
         </ul>
 
       </div>
