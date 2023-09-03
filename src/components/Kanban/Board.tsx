@@ -196,7 +196,7 @@ const Panel = ({ children, panelName }: any) => {
 
   return (
     <div
-      className={`w-[300px] rounded-md p-3 ${isOver ? 'bg-blue-200' : 'bg-neutral-200'}`}
+      className={`w-[300px] rounded-md p-3 ${isOver ? 'bg-sky-500' : 'bg-sky-600'}`}
       ref={drop}
     >
       {children}
@@ -208,19 +208,19 @@ export default function Board() {
   const [items, dispatch] = useReducer(itemsReducer, initialItems);
 
   return (
-    <main className='h-[calc(100vh-40px)] flex flex-row justify-center gap-2 p-3 pb-5 bg-sky-600'>
+    <main className='h-[calc(100vh-40px)] flex flex-row justify-center gap-2 p-3 pb-5 bg-neutral-200'>
       <DndProvider backend={HTML5Backend}>
         <ItemsContext.Provider value={{ items, dispatch }}>
           <Panel panelName="Todo">
-            <h3 className='text-xl'>Todo</h3>
+            <h3 className='text-xl text-white'>Todo</h3>
             <Items name="todo" />
           </Panel>
           <Panel panelName="Doing">
-            <h3 className='text-xl'>Doing</h3>
+            <h3 className='text-xl text-white'>Doing</h3>
             <Items name="doing" />
           </Panel>
           <Panel panelName="Done">
-            <h3 className='text-xl'>Done</h3>
+            <h3 className='text-xl text-white'>Done</h3>
             <Items name="done" />
           </Panel>
         </ItemsContext.Provider>
