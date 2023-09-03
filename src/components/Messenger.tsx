@@ -72,7 +72,7 @@ export default function Messenger() {
 
   // TextArea Resizing
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (e.target.value) { setDraft(e.target.value) };
+    setDraft(e.target.value);
 
     const height = e.target.scrollHeight;
     const rowHeight = 25;
