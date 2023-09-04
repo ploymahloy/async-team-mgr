@@ -145,7 +145,7 @@ export default function Messenger() {
               )}>
                 <div
                   key={id}
-                  className={'max-w-[45%] my-1 px-2 py-1 rounded-xl text-white break-words '
+                  className={'max-w-[55%] my-1 px-2 py-1 rounded-lg text-white break-words whitespace-pre-wrap '
                     + (flow === "outgoing"
                       ? 'bg-sky-600'
                       : 'bg-zinc-500'
