@@ -7,6 +7,7 @@ import {
 } from 'react';
 
 import { BsFillPersonFill } from 'react-icons/bs';
+import { PiNotePencil } from 'react-icons/pi';
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 interface MessagesType {
@@ -104,38 +105,44 @@ export default function Messenger() {
 
   return (
     <div className="box-border flex h-[calc(100vh-40px)]">
-      <div className="min-w-[320px] flex flex-col">
+      <div className="min-w-[320px] flex flex-col bg-neutral-500">
 
-        <p className="text-2xl mt-3 text-center">Messages</p>
+        <p className="text-2xl mt-3 text-center text-white">Messages</p>
 
-        {/* Search Bar */}
-        <input
-          ref={searchRef}
-          onChange={handleInput}
-          placeholder="Search messages"
-          className="m-3 p-2 outline-2 outline-neutral-400 border-2 border-neutral-400 rounded-lg"
-        />
+        {/* Search Bar and New Thread Button */}
+        <div className='flex items-center m-3'>
+          <input
+            ref={searchRef}
+            onChange={handleInput}
+            placeholder="Search messages"
+            className="grow px-2 py-1 rounded-lg focus:border-none focus:outline-none"
+          />
+          <button className="flex justify-center items-center ml-3 h-10 w-10 rounded-full bg-sky-600 active:bg-sky-500 text-white text-2xl">
+            <PiNotePencil />
+          </button>
+        </div>
 
         {/* Open Threads */}
-        <ul className='w-full'>
+        <ul className='w-full overflow-scroll'>
           {threads.length > 0
             ? threads.map((name, index) => {
               return (
-                <button key={index} className='flex items-center w-full pl-3 hover:bg-zinc-200'>
-                  <BsFillPersonFill className='mr-2 p-1 border-2 rounded-full border-sky-600 text-4xl text-sky-600' />
-                  <li className="my-3">
+                <button key={index} className='flex items-center w-full pl-3 bg-transparent hover:bg-neutral-400'>
+                  <BsFillPersonFill className='mr-2 p-1 border-2 rounded-full border-white text-4xl text-white' />
+                  <li className="my-3 text-white">
                     {name}
                   </li>
                 </button>
               )
             })
-            : <li className='text-center'>No results found</li>}
+            : <li className='text-center text-white'>No results found</li>
+          }
         </ul>
 
       </div>
-      <div className="w-full flex flex-col justify-end bg-zinc-200">
+      <div className="w-full flex flex-col justify-end bg-zinc-800">
 
-        {/* Selected Thread Messages */}
+        {/* Thread Messages */}
         <div className='p-3 pb-0 overflow-scroll'>
           {messages.map(({ id, flow, body }, index) => {
             return (
@@ -166,12 +173,12 @@ export default function Messenger() {
               handleContentChange(e as ChangeEvent<HTMLTextAreaElement>)
             }}
             value={draft}
-            className="w-[30vw] max-w-xl mr-3 p-2 bg-white rounded-md outline-none resize-none"
+            className="w-[30vw] max-w-xl mr-3 px-2 py-1 bg-white rounded-md outline-none resize-none"
           />
           <button
             type='submit'
             onClick={(e) => handleButtonClick(e)}
-            className='inline-block h-11 bg-sky-600 active:bg-sky-500 rounded-full p-3'
+            className='inline-block h-11 p-3 rounded-full bg-sky-600 active:bg-sky-500'
           >
             <RiSendPlaneFill className='text-xl text-white' />
           </button>
